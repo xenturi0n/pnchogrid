@@ -8,23 +8,23 @@ $mq-breakpoints: (
     xl: 1200px
 );
 
-$modular-scale:(
-    null: 1.2,
-    sm: 1.2,
-    md: 1.2,
-    lg: 1.2,
-    xl: 1.2
-);
+// $modular-scale:(
+//     null: 1.2,
+//     sm: 1.2,
+//     md: 1.2,
+//     lg: 1.2,
+//     xl: 1.2
+// );
 
 $typhography:(
     base:(
         null: (), sm: (), lg: (), xl: ()
     ),
     h1:(
-        null: (), sm: (), lg: (), xl: ()
+        null: (a), sm: (b), lg: (c), xl: (d)
     ),
     h2:(
-        null: (), sm: (), lg: (), xl: ()
+        null: (e), sm: (f), lg: (g), xl: (h)
     ),
     h3:(
         null: (), sm: (), lg: (), xl: ()
@@ -32,9 +32,37 @@ $typhography:(
 );
 
 
+
 /*=============================================
 =            TOOLS            =
 =============================================*/
+@function map-fetch($map, $keys) {
+    $key: nth($keys, 1);
+    $length: length($keys);
+    $value: map-get($map, $key);
+    @if $length > 1 {
+      $rest: ();
+      @for $i from 2 through $length {
+        $rest: append($rest, nth($keys, $i));
+      }
+      @return map-fetch($value, $rest);
+    } @else {
+      @return $value;
+    }
+  }
+
+
+
+$keys: sm xl;
+
+$numero: type-of($value: $mq-breakpoints);
+
+$prueba: map-fetch($map: $typhography, $keys: h1 xl);
+
+
+/*----------  #{$prueba}  ----------*/
+
+
 @function stripUnit($num){
     @return $num / ($num * 0 + 1);
 }
@@ -78,7 +106,15 @@ $typhography:(
 
 }
 
-
+@each $name in $typhography {
+    .test{
+       color: blue;
+/*=============================================
+=            #{$name}            =
+=============================================*/
+    }
+    
+}
 
 /*=============================================
 =            GENERIC            =
