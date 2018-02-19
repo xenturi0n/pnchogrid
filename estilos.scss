@@ -1,0 +1,235 @@
+/*=============================================
+=            SETTINGS            =
+=============================================*/
+$mq-breakpoints: (
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px
+);
+
+$modular-scale:(
+    null: 1.2,
+    sm: 1.2,
+    md: 1.2,
+    lg: 1.2,
+    xl: 1.2
+);
+
+$typhography:(
+    base:(
+        null: (), sm: (), lg: (), xl: ()
+    ),
+    h1:(
+        null: (), sm: (), lg: (), xl: ()
+    ),
+    h2:(
+        null: (), sm: (), lg: (), xl: ()
+    ),
+    h3:(
+        null: (), sm: (), lg: (), xl: ()
+    )
+);
+
+
+/*=============================================
+=            TOOLS            =
+=============================================*/
+@function stripUnit($num){
+    @return $num / ($num * 0 + 1);
+}
+
+@function _to-percentage($font-size) {
+    @if unit($font-size) != 'px' {
+        @error "_ty-to-percentage() only accepts pixel sizes";
+    } @else {
+        @return $font-size / 16px * 100%;
+    }
+}
+
+@function _to-em($font-size, $ref-size: null) {
+    @if unit($font-size) == "px" {
+        @if not $ref-size {
+            @error "$ref-size must be present for px -> em conversion";
+        } @else {
+            @return _strip-unit($font-size) / _strip-unit($ref-size) * 1em;
+        }
+    }  
+    @else if unit($font-size) == 'em' {
+        @if $ref-size {
+            @return _strip-unit($font-size) / _strip-unit($ref-size) * 1em;
+        } @else {
+            @return _strip-unit($font-size) * 1em;
+        }
+    }  
+    @else if unit($font-size) == "rem" {
+        @return _strip-unit($font-size) * 1em;
+    }    
+    @else {
+        @error "_ty-to-em() only supports px -> em, em -> em and rem -> em conversion";
+    }
+}
+
+@function vr($value){
+
+}
+
+@mixin typhography(){
+
+}
+
+
+
+/*=============================================
+=            GENERIC            =
+=============================================*/
+*, *::after, *::before{
+    box-sizing: border-box;
+}
+
+
+/*=============================================
+=            ELEMENTS            =
+=============================================*/
+html{
+    font-size: 100%;
+    font-family:Helvetica,  Arial, sans-serif;
+    line-height: 1.618;
+}
+
+body{
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+p{
+    margin: 0;
+    padding: 0;
+}
+
+
+/*=============================================
+=            OBJECTS            =
+=============================================*/
+.o-wrapper{
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: .809rem;
+    padding-right: .809rem;
+    overflow-x: hidden;
+}
+
+.o-wrapper--collapse{
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-x: hidden;
+}
+
+.o-layout{
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-left: -1.618rem;
+}
+
+.o-layout--collapse{
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.o-layout::after{
+    content:'';
+    display: table;
+    clear: both;
+}
+
+.o-layout__item{
+    box-sizing: border-box;
+    width: 100%;
+    display: block;
+    float: left;
+    padding-left: 1.618rem;
+}
+
+.o-layout__item--collapse{
+    box-sizing: border-box;
+    width: 100%;
+    display: block;
+    float: left;
+}
+
+
+/*=============================================
+=            COMPONENTS            =
+=============================================*/
+.c-box{
+    background: gray;
+    color: white;
+    padding: .809rem;
+}
+
+
+/*=============================================
+=            UTILITIES            =
+=============================================*/
+
+/*----------  variables  ----------*/
+$fractions: 1 2 3 4 5 6 7 8 9 10 11 12;
+
+$widths-delimiter: \/;
+
+$widths-breakpoint-separator: \@;
+
+$mq-breakpoints: (
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px
+);
+
+@mixin widths($columns, $breakpoint: null){
+    @each $denominator in $columns{        
+        /*----------  #{$denominator} Columnas  ----------*/      
+        @for $numerator from 1 through $denominator{
+            .u-#{$numerator}#{$widths-delimiter}#{$denominator}#{$breakpoint}{
+                width: ($numerator / $denominator) * 100%;
+            }
+        }
+    }
+}
+
+@include widths($fractions);
+
+@if (variable-exists($name: mq-breakpoints)){
+    @each $bp-name, $bp-value in $mq-breakpoints{        
+        /*----------  #{$bp-name} #{$bp-value} ----------*/
+        @media screen and (min-width: #{$bp-value}) {
+            @include widths($fractions, #{$widths-breakpoint-separator}#{$bp-name});
+        }
+    }
+}
+    
+
+/*----------  DEBUG  ----------*/
+.debug{
+    outline: 1px solid red;
+}
+
+.debug--green{
+    outline: 1px solid green;
+}
+
+.debug--yellow{
+    outline: 1px solid yellow;
+}
+
+.debug--blue{
+    outline: 1px solid yellow;
+}
